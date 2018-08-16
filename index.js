@@ -2,10 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const yazl = require("yazl")
 const yauzl = require("yauzl")
+const mkdir = require('mkdirp').sync
 
 exports.zip = function (source, target, cb) {
   const promiseCallback = (resolve, reject) => {
-    if (!fs.existsSync(path.dirname(target))) mdSync(path.dirname(target))
+    if (!fs.existsSync(path.dirname(target))) mkdir(path.dirname(target))
     let called = false
     let zipfile = new yazl.ZipFile();
 
@@ -64,7 +65,7 @@ exports.zip = function (source, target, cb) {
 exports.unzip = function (zip, target = ".", cb) {
   if (typeof cb !== 'function') cb = void 0
   const promiseCallback = (resolve, reject) => {
-    if (!fs.existsSync(path.dirname(target))) mdSync(path.dirname(target))
+    if (!fs.existsSync(path.dirname(target))) mkdir(path.dirname(target))
     let called = false
     yauzl.open(zip, { lazyEntries: true }, function (err, zipfile) {
       if (err) throw err;
@@ -79,7 +80,7 @@ exports.unzip = function (zip, target = ".", cb) {
             if (err) throw err;
             const absolute = path.join(target, fileName)
             const dir = path.dirname(absolute)
-            if (!fs.existsSync(dir)) mdSync(dir)
+            if (!fs.existsSync(dir)) mkdir(dir)
             let ws = fs.createWriteStream(absolute)
             ws.on('close', () => {
               zipfile.readEntry();
@@ -108,13 +109,4 @@ exports.unzip = function (zip, target = ".", cb) {
     });
   }
   return cb ? promiseCallback() : new Promise(promiseCallback)
-}
-
-function mdSync (p) {
-  const dir = path.dirname(p)
-  if (!fs.existsSync(dir)) mkdir(dir)
-  else {
-    if (!fs.statSync(dir).isDirectory()) throw new Error(`"${path.resolve(dir)}" is not a directory.`)
-    fs.mkdirSync(p)
-  }
 }

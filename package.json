@@ -1,6 +1,6 @@
 {
   "name": "zauz",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple zip and unzip.",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "author": "toyobayashi",
   "license": "MIT",
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "yauzl": "^2.9.1",
     "yazl": "^2.4.3"
   }
