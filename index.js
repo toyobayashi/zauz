@@ -1,4 +1,9 @@
-const fs = require('fs')
+let fs
+try {
+  fs = require('original-fs')
+} catch (e) {
+  fs = require('fs')
+}
 const path = require('path')
 const yazl = require("yazl")
 const yauzl = require("yauzl")
